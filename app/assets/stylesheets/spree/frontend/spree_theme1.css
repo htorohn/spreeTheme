@@ -1,4 +1,14 @@
+
+
 /*
-Placeholder manifest file.
-the installer will append this file to the app vendored assets here: 'vendor/assets/stylesheets/spree/frontend/all.css'
+ * This is a manifest file that'll automatically include all the stylesheets available in this directory
+ * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
+ *
+
+*= require_tree .
+*= require_self
+
+
 */
+

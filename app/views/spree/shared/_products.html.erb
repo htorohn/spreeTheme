@@ -1,0 +1,76 @@
+<% content_for :head do %>
+  <% if products.respond_to?(:total_pages) %>
+    <%= rel_next_prev_link_tags products %>
+  <% end %>
+<% end %>
+
+<div data-hook="products_search_results_heading">
+  <% if products.empty? %>
+    <div data-hook="products_search_results_heading_no_results_found">
+      <%= Spree.t(:no_products_found) %>
+    </div>
+  <% elsif params.key?(:keywords) %>
+    <div data-hook="products_search_results_heading_results_found">
+      <h3 class="search-results-title"><%= Spree.t(:search_results, keywords: h(params[:keywords])) %></h3>
+    </div>
+  <% end %>
+</div>
+
+<% if products.any? %>
+<div class="eshop-section section">
+	<div class="container">
+  <div id="products" class="row" data-hook>
+    <% products.each do |product| %>
+      <div class="col-md-3 col-sm-6">
+
+        <% url = spree.product_path(product, taxon_id: @taxon.try(:id)) %>
+        <div id="product_<%= product.id %>" class="shop-item <%#= cycle("alpha", "secondary", "", "omega secondary", name: "classes") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
+          <% cache(@taxon.present? ? [I18n.locale, current_currency, @taxon, product] : cache_key_for_product(product)) do %>
+            <div class="image">
+              <%= link_to url, itemprop: "url" do %>
+                <%= small_image(product, itemprop: "image") %><br/>
+               <% end %>
+            </div>
+
+            <div class="title">
+              <h3>
+              <%= content_tag(:span, truncate(product.name, length: 50), class: 'info', itemprop: "name", title: product.name) %>
+              </h3>
+            </div>
+            
+            <!-- Product Price-->
+						<div class="price">
+							<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+              <span class="price selling" itemprop="price"><%= display_price(product) %></span>
+						</div>
+            
+            <!--<div class="description">-->
+            <!--  <p>-->
+                <%#= product.description rescue Spree.t(:product_has_no_description) %>
+            <!--  </p>-->
+            <!--</div>-->
+            
+            
+            <!-- Add to Cart Button -->
+						<div class="actions">
+						  <%= link_to url, class: "btn" do%>
+						    <span>View Product</span>
+						  <% end %>
+							<!--<a href="page-product-details.html" class="btn"><i class="icon-shopping-cart icon-white"></i> Add to Cart</a>-->
+						</div>
+              
+              
+            
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <% reset_cycle("classes") %>
+  </div>
+  </div>
+  </div>
+<% end %>
+
+<% if products.respond_to?(:total_pages) %>
+  <%= paginate products, theme: 'twitter-bootstrap-3' %>
+<% end %>

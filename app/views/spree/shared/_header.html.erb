@@ -1,0 +1,69 @@
+<!-- Navigation & Logo-->
+        <div class="mainmenu-wrapper">
+	        <div class="container">
+	        	<div class="menuextras">
+					<div class="extras">
+						<ul>
+							<li class="shopping-cart-items" id="link-to-cart" data-hook>
+							    <!--<i class="glyphicon glyphicon-shopping-cart icon-white">-->
+							        
+							    <!--</i> -->
+							    <!--<a href="page-shopping-cart.html">-->
+							    <!--    <b>3 items</b>-->
+							    <!-- </a>-->
+							    <noscript>
+							    		<%= link_to_cart %>
+							   	</noscript>
+							    &nbsp;
+							</li>
+							<script>Spree.fetch_cart()</script>
+							<li><span>|</span></li>
+			        		<% if !spree_current_user %>
+			        			<li>
+				        			<!--<a href="page-login.html">Login</a>-->
+				        			<%= link_to "Login", new_spree_user_session_path, :class => ''  %>
+				        		</li>
+			        		<% else %>
+			        			<%= render partial: 'spree/shared/user_menu' %>
+			       			<% end %>
+			        	</ul>
+			        	
+					</div>
+		        </div>
+		        <nav id="mainmenu" class="mainmenu">
+					<ul>
+						<li class="logo-wrapper">
+						    <%= logo img_options: { class: "", width: '138' } %>
+						</li>
+						
+						<li id="home-link" data-hook>
+							<%= link_to Spree.t(:home), spree.root_path %>
+						</li>
+						
+						<% max_level = Spree::Config[:max_level_in_taxons_menu] || 1 %>
+						<% @taxonomies.each do |taxonomy| %>
+    						<li class="dropdown">
+    						    <%= link_to '#', data: { toggle: "dropdown"}, "aria-haspopup" => 'true' do%>
+    						        <%= taxonomy.name %> <span class="caret"></span>
+    						    <% end %>
+    						     <!-- <div class="mainmenu-submenu">-->
+    							    <!--<div class="mainmenu-submenu-inner"> -->
+                                      <%= nav_tree(taxonomy.root, @taxon, max_level) %>
+                                  <!--  </div>-->
+                                  <!--</div>-->
+                                 
+                                
+    						</li>
+						<% end %>
+						
+						
+					<!--<li class="navbar-form navbar-right" id="search-bar" data-hook>-->
+				 <!--     <div class="form-group">-->
+				      <%#= render partial: 'spree/shared/search' %>
+				    <!--  </div>-->
+				    <!--</li>-->
+					</ul>	
+					
+				</nav>
+			</div>
+		</div>
